@@ -10,20 +10,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const correctIds = ['seed', 'water-can', 'sun'];
   const placed = new Set();
 
-  // --- Desktop drag events ---
+  // Desktop drag events
   draggables.forEach(drag => {
     drag.addEventListener('dragstart', e => {
       draggedItem = e.target;
-      e.dataTransfer.setData('text/plain', draggedItem.id); // Ensure data is set
-      e.dataTransfer.effectAllowed = 'move'; // Add this line
+      e.dataTransfer.setData('text/plain', draggedItem.id);
     });
   });
 
   dropzones.forEach(zone => {
-    zone.addEventListener('dragover', e => {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = 'move'; // Add this line
-    });
+    zone.addEventListener('dragover', e => e.preventDefault());
 
     zone.addEventListener('drop', e => {
       e.preventDefault();
@@ -32,23 +28,20 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!zone.querySelector('.draggable')) {
         zone.appendChild(item);
         item.style.position = 'static';
-        item.style.left = ''; // Clear inline styles
-        item.style.top = '';  // Clear inline styles
         placed.add(id);
         checkCompletion();
       }
     });
   });
 
-  // --- Mobile drag logic ---
+  // Mobile drag logic
   draggables.forEach(drag => {
     drag.addEventListener('touchstart', e => {
       isDragging = true;
       draggedItem = drag;
       const touch = e.touches[0];
-      const rect = draggedItem.getBoundingClientRect();
-      touchOffsetX = touch.clientX - rect.left;
-      touchOffsetY = touch.clientY - rect.top;
+      touchOffsetX = touch.clientX - draggedItem.getBoundingClientRect().left;
+      touchOffsetY = touch.clientY - draggedItem.getBoundingClientRect().top;
       draggedItem.style.zIndex = 999;
     });
 
@@ -79,8 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ) {
           zone.appendChild(draggedItem);
           draggedItem.style.position = 'static';
-          draggedItem.style.left = ''; // Clear inline styles
-          draggedItem.style.top = '';  // Clear inline styles
           placed.add(draggedItem.id);
           checkCompletion();
           return;
@@ -90,29 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
       // Reset position if not placed
       draggedItem.style.left = '';
       draggedItem.style.top = '';
-    });
-  });
-
-  document.querySelectorAll('.grow-slot').forEach(slot => {
-    slot.addEventListener('drop', e => {
-      e.preventDefault();
-
-      if (!draggedItem) return;
-      if (slot.children.length > 0) return;
-
-      draggedItem.style.position = 'relative';
-      draggedItem.style.left = '0px';
-      draggedItem.style.top = '0px';
-      draggedItem.style.width = '80px';
-      draggedItem.style.zIndex = 1;
-      draggedItem.style.margin = 'auto';
-      draggedItem.setAttribute('draggable', 'false');
-
-      slot.appendChild(draggedItem);
-      placed.add(draggedItem.id);
-
-      if (placed.size === 3) checkCompletion();
-      draggedItem = null;
     });
   });
 
