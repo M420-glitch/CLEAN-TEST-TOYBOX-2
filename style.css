@@ -61,9 +61,6 @@ h1 {
   border-radius: 8px;
   z-index: 10;
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 #toolbox {
@@ -192,4 +189,3 @@ h1 {
     }
   }
 }
-

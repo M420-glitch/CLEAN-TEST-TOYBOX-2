@@ -11,26 +11,21 @@
     <button onclick="goToMap()">🗺️ Progress Map</button>
     <button onclick="saveAndExit()">💾 Save & Exit</button>
   </div>
+  <h1>🌱 Ground Toybox v5</h1>
+  <p>Grow crops for the community. Pick 3 essentials from the toolbox. Not everything belongs in the soil.</p>
 
-  <header>
-    <h1>🌱 Ground Toybox v12</h1>
-    <p>Grow crops for the community. Pick 3 essentials from the toolbox. Not everything belongs in the soil.</p>
-  </header>
-
-  <main>
-    <div id="game-container">
-      <div id="game-area">
-        <div id="grow-dropzone">
-          <div class="grow-slot" data-slot="1"></div>
-          <div class="grow-slot" data-slot="2"></div>
-          <div class="grow-slot" data-slot="3"></div>
-        </div>
-        <div id="ground-strip"></div>
+  <div id="game-container">
+    <div id="game-area">
+      <div id="grow-dropzone">
+        <div class="grow-slot" data-slot="1"></div>
+        <div class="grow-slot" data-slot="2"></div>
+        <div class="grow-slot" data-slot="3"></div>
       </div>
+      <div id="ground-strip"></div>
     </div>
 
-    <section id="toolbox">
-      <h2>Toolbox:</h2>
+    <div id="toolbox">
+      <p>Toolbox:</p>
       <div class="draggable" id="seed" draggable="true">
         <img src="assets/grow/seed.png" alt="Seed" />
         <span>Seed</span>
@@ -51,12 +46,10 @@
         <img src="assets/grow/flatscreen.png" alt="Flatscreen" />
         <span>Flatscreen</span>
       </div>
-    </section>
-  </main>
+    </div>
+  </div>
 
-  <aside id="xp-counter">
-    XP: <span id="xp-value">--</span>
-  </aside>
+  <div id="xp-counter">XP: <span id="xp-value">--</span></div>
 
   <div id="completion-buttons" style="display: none;">
     <button id="btn-continue">Continue</button>
@@ -65,6 +58,5 @@
 
   <script src="../playerState.js"></script>
   <script src="game.js"></script>
-
 </body>
 </html>

@@ -118,12 +118,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
-
-function goToMap() {
-  window.location.href = "../ProgressMap/index.html";
-}
-
-function saveAndExit() {
-  playerState.save();
-  window.location.href = "../ExitScreen/index.html";
-}
