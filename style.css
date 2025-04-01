@@ -58,41 +58,40 @@ h1 {
 .grow-slot {
   width: 100px;
   height: 100px;
-  border: 2px dotted #888;
-  background: #fff;
-  border-radius: 10px;
+  border: 2px dashed #888;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  z-index: 10;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden; /* Prevents content overflow */
 }
 
 #toolbox {
   display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 20px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  background: #e0f7fa;
+  border-left: 2px solid #444;
+  min-width: 140px;
+  z-index: 10;
 }
 
 .draggable {
-  width: 80px;
-  height: 80px;
-  background: #fff;
-  border: 1px solid #ccc;
-  border-radius: 5px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  text-align: center;
+  margin: 10px;
   cursor: grab;
-  margin: 5px; /* Added margin for spacing */
+  width: 80px;
+  position: relative;
 }
 
 .draggable img {
-  max-width: 60px;
-  max-height: 60px;
+  width: 80px;
+  height: auto;
 }
 
 #xp-counter {
@@ -100,7 +99,7 @@ h1 {
   top: 10px;
   right: 20px;
   font-family: monospace;
-  font-size: 1.2em;
+  font-size: 20px;
   background: #dfffcf;
   padding: 6px 12px;
   border: 2px solid #6bb96b;
@@ -145,42 +144,30 @@ h1 {
   cursor: pointer;
 }
 
-/* ✅ Portrait mode */
+/* ✅ Mobile support */
 @media (max-width: 768px) {
   #game-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  #game-area {
-    width: 90%;
-    max-width: 400px;
-    height: 350px;
-  }
-
-  #grow-dropzone {
-    bottom: 20%;
-    gap: 20px;
-  }
-
-  .grow-slot {
-    width: 70px;
-    height: 70px;
+    flex-direction: column !important;
+    align-items: center !important;
   }
 
   #toolbox {
-    width: 90%;
-    justify-content: space-around;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    border-left: none !important;
+    border-top: 2px solid #444 !important;
+    min-width: 100% !important;
   }
 
   .draggable {
-    width: 60px;
-    margin: 5px;
-    position: relative;
+    width: 60px !important;
+    margin: 5px !important;
+    position: relative !important;
   }
 
   .draggable img {
-    width: 60px;
+    width: 60px !important;
   }
 }
 
