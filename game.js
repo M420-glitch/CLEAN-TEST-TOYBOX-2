@@ -2,11 +2,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const draggables = document.querySelectorAll('.draggable');
   const dropzones = document.querySelectorAll('.grow-slot');
   const completionButtons = document.getElementById('completion-buttons');
+  const dragItem = document.getElementById('drag1');
+  const dropArea = document.getElementById('drop-area');
+  const completionMessage = document.getElementById('completion-message');
 
   let isDragging = false;
   let draggedItem = null;
   let touchOffsetX = 0;
   let touchOffsetY = 0;
+  let touchStartX = 0;
+  let touchStartY = 0;
   const correctIds = ['seed', 'water-can', 'sun'];
   const placed = new Set();
 
@@ -73,9 +78,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!isDragging) return;
       e.preventDefault();
       const touch = e.touches[0];
+      const rect = draggedItem.getBoundingClientRect();
       draggedItem.style.position = 'absolute';
-      draggedItem.style.left = touch.clientX - (draggedItem.offsetWidth / 2) + window.pageXOffset + 'px';
-      draggedItem.style.top = touch.clientY - (draggedItem.offsetHeight / 2) + window.pageYOffset + 'px';
+      draggedItem.style.left = touch.clientX - (rect.width / 2) + 'px';
+      draggedItem.style.top = touch.clientY - (rect.height / 2) + 'px';
     }, { passive: false });
 
     drag.addEventListener('touchend', e => {
@@ -116,4 +122,79 @@ document.addEventListener('DOMContentLoaded', () => {
       completionButtons.style.display = 'block';
     }
   }
+
+  // Desktop
+  const handleDragStart = (event) => {
+    isDragging = true;
+    event.dataTransfer.setData('text/plain', dragItem.id);
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    if (!isDragging) return;
+    isDragging = false;
+
+    const id = event.dataTransfer.getData('text/plain');
+    const draggedElement = document.getElementById(id);
+    dropArea.appendChild(draggedElement);
+    completionMessage.style.display = "block";
+  };
+
+  // Mobile
+  const handleTouchStart = (event) => {
+    isDragging = true;
+    touchStartX = event.touches[0].clientX - dragItem.offsetLeft;
+    touchStartY = event.touches[0].clientY - dragItem.offsetTop;
+  };
+
+  const handleTouchMove = (event) => {
+    if (!isDragging) return;
+    event.preventDefault();
+
+    const touchX = event.touches[0].clientX;
+    const touchY = event.touches[0].clientY;
+
+    dragItem.style.left = (touchX - touchStartX) + 'px';
+    dragItem.style.top = (touchY - touchStartY) + 'px';
+  };
+
+  const handleTouchEnd = () => {
+    if (!isDragging) return;
+    isDragging = false;
+
+    const dropAreaRect = dropArea.getBoundingClientRect();
+    const dragItemRect = dragItem.getBoundingClientRect();
+
+    const centerX = dragItemRect.left + dragItemRect.width / 2;
+    const centerY = dragItemRect.top + dragItemRect.height / 2;
+
+    const isInside = (
+      centerX >= dropAreaRect.left &&
+      centerX <= dropAreaRect.right &&
+      centerY >= dropAreaRect.top &&
+      centerY <= dropAreaRect.bottom
+    );
+
+    if (isInside) {
+      dropArea.appendChild(dragItem);
+      dragItem.style.position = 'static'; // snap into flow
+      completionMessage.style.display = "block";
+    } else {
+      dragItem.style.left = '';
+      dragItem.style.top = '';
+    }
+  };
+
+  // Assign all listeners
+  dragItem.addEventListener('dragstart', handleDragStart);
+  dropArea.addEventListener('dragover', handleDragOver);
+  dropArea.addEventListener('drop', handleDrop);
+
+  dragItem.addEventListener('touchstart', handleTouchStart);
+  dragItem.addEventListener('touchmove', handleTouchMove, { passive: false });
+  dragItem.addEventListener('touchend', handleTouchEnd);
 });

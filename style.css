@@ -1,6 +1,6 @@
 body {
   background: #f0f0f0;
-  font-family: monospace;
+  font-family: sans-serif;
   text-align: center;
   margin: 0;
   padding: 0;
@@ -15,7 +15,7 @@ h1 {
   justify-content: center;
   align-items: flex-start;
   gap: 20px;
-  margin-top: 20px;
+  margin-top: 50px;
   max-width: 900px;
   margin-left: auto;
   margin-right: auto;
@@ -78,10 +78,15 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 10px;
+  margin: 20px auto;
   cursor: grab;
   width: 80px;
-  position: relative; /* Changed from absolute to relative */
+  height: 80px;
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+  line-height: 80px;
+  position: absolute;
 }
 
 .draggable img {
@@ -139,6 +144,33 @@ h1 {
   cursor: pointer;
 }
 
+#drag-area {
+  width: 200px;
+  height: 200px;
+  background-color: #f0f0f0;
+  border: 2px dashed #ccc;
+  margin-right: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#drop-area {
+  width: 200px;
+  height: 200px;
+  background-color: #e0e0e0;
+  border: 2px dashed #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#completion-message {
+  margin-top: 20px;
+  font-size: 20px;
+  color: green;
+}
+
 /* ✅ Mobile support */
 @media (max-width: 768px) {
   #game-container {
@@ -163,6 +195,12 @@ h1 {
 
   .draggable img {
     width: 60px !important;
+  }
+
+  #drag-area,
+  #drop-area {
+    margin-right: 0;
+    margin-bottom: 20px;
   }
 
   /* Landscape mode adjustments for mobile */
