@@ -66,9 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
     drag.addEventListener('touchstart', e => {
       isDragging = true;
       draggedItem = drag;
-      const touch = e.touches[0];
-      touchOffsetX = touch.clientX - draggedItem.getBoundingClientRect().left;
-      touchOffsetY = touch.clientY - draggedItem.getBoundingClientRect().top;
       draggedItem.style.zIndex = 999;
     });
 
@@ -76,13 +73,15 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!isDragging) return;
       e.preventDefault();
       const touch = e.touches[0];
-      draggedItem.style.left = (touch.clientX - touchOffsetX) + 'px';
-      draggedItem.style.top = (touch.clientY - touchOffsetY) + 'px';
+      draggedItem.style.position = 'absolute';
+      draggedItem.style.left = touch.pageX - (draggedItem.offsetWidth / 2) + 'px';
+      draggedItem.style.top = touch.pageY - (draggedItem.offsetHeight / 2) + 'px';
     }, { passive: false });
 
     drag.addEventListener('touchend', e => {
       if (!isDragging) return;
       isDragging = false;
+      draggedItem.style.position = 'static';
 
       const dragRect = draggedItem.getBoundingClientRect();
       for (const zone of dropzones) {
@@ -94,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
           centerX > zoneRect.left &&
           centerX < zoneRect.right &&
           centerY > zoneRect.top &&
-          centerY < zoneRect.bottom &&
+          centerY > zoneRect.bottom &&
           !zone.querySelector('.draggable')
         ) {
           zone.appendChild(draggedItem);
