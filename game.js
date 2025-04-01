@@ -1,135 +1,95 @@
-window.addEventListener("DOMContentLoaded", () => {
-  playerState.load();
-  document.getElementById("xp-value").textContent = playerState.getXP();
+document.addEventListener('DOMContentLoaded', () => {
+  const draggables = document.querySelectorAll('.draggable');
+  const dropzones = document.querySelectorAll('.grow-slot');
+  const completionButtons = document.getElementById('completion-buttons');
 
-  // Add console logs to check which CSS is applied
-  if (window.matchMedia("(min-width: 769px)").matches) {
-    console.log("desktopstyle.css is applied");
-  } else if (
-    window.matchMedia("(max-width: 768px) and (orientation: portrait)").matches
-  ) {
-    console.log("portraitstyle.css is applied");
-  } else if (
-    window.matchMedia("(max-width: 1024px) and (orientation: landscape)").matches
-  ) {
-    console.log("landscapestyle.css is applied");
-  }
-});
+  let isDragging = false;
+  let draggedItem = null;
+  let touchOffsetX = 0;
+  let touchOffsetY = 0;
+  const correctIds = ['seed', 'water-can', 'sun'];
+  const placed = new Set();
 
-let dragged = null;
-let taskComplete = false;
-const correctItems = ['seed', 'water-can', 'sun'];
-let placedItems = [];
-
-document.querySelectorAll('.draggable').forEach(el => {
-  el.addEventListener('dragstart', e => {
-    dragged = e.target;
-    setTimeout(() => {
-      e.target.style.visibility = 'hidden';
-    }, 0);
+  // Desktop drag events
+  draggables.forEach(drag => {
+    drag.addEventListener('dragstart', e => {
+      draggedItem = e.target;
+      e.dataTransfer.setData('text/plain', draggedItem.id);
+    });
   });
 
-  el.addEventListener('dragend', e => {
-    e.target.style.visibility = 'visible';
+  dropzones.forEach(zone => {
+    zone.addEventListener('dragover', e => e.preventDefault());
+
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      const id = e.dataTransfer.getData('text/plain');
+      const item = document.getElementById(id);
+      if (!zone.querySelector('.draggable')) {
+        zone.appendChild(item);
+        item.style.position = 'static';
+        placed.add(id);
+        checkCompletion();
+      }
+    });
   });
-});
 
-document.getElementById('game-area').addEventListener('dragover', e => {
-  e.preventDefault();
-});
+  // Mobile drag logic
+  draggables.forEach(drag => {
+    drag.addEventListener('touchstart', e => {
+      isDragging = true;
+      draggedItem = drag;
+      const touch = e.touches[0];
+      touchOffsetX = touch.clientX - draggedItem.getBoundingClientRect().left;
+      touchOffsetY = touch.clientY - draggedItem.getBoundingClientRect().top;
+      draggedItem.style.zIndex = 999;
+    });
 
-document.querySelectorAll('.grow-slot').forEach(slot => {
-  slot.addEventListener('dragover', e => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-  });
+    drag.addEventListener('touchmove', e => {
+      if (!isDragging) return;
+      e.preventDefault();
+      const touch = e.touches[0];
+      draggedItem.style.left = (touch.clientX - touchOffsetX) + 'px';
+      draggedItem.style.top = (touch.clientY - touchOffsetY) + 'px';
+    }, { passive: false });
 
-  slot.addEventListener('drop', e => {
-    e.preventDefault();
+    drag.addEventListener('touchend', e => {
+      if (!isDragging) return;
+      isDragging = false;
 
-    if (!dragged) return;
-    if (slot.children.length > 0) return;
+      const dragRect = draggedItem.getBoundingClientRect();
+      for (const zone of dropzones) {
+        const zoneRect = zone.getBoundingClientRect();
+        const centerX = dragRect.left + dragRect.width / 2;
+        const centerY = dragRect.top + dragRect.height / 2;
 
-    dragged.style.position = 'relative';
-    dragged.style.left = '0px';
-    dragged.style.top = '0px';
-    dragged.style.width = '80px';
-    dragged.style.zIndex = 1;
-    dragged.style.margin = 'auto';
-    dragged.setAttribute('draggable', 'false');
-
-    slot.appendChild(dragged);
-    placedItems.push(dragged.id);
-
-    if (placedItems.length === 3) checkGrowResult();
-    dragged = null;
-  });
-});
-
-function checkGrowResult() {
-  const gameAreaEl = document.getElementById('game-area');
-  const xpEl = document.getElementById('xp-value');
-  const messageEl = document.getElementById('game-message');
-
-  const isValid = correctItems.every(item => placedItems.includes(item));
-
-  messageEl.textContent = '';
-  messageEl.className = 'game-message';
-
-  if (isValid) {
-    gameAreaEl.classList.add('complete');
-    gameAreaEl.style.borderColor = '#28a745';
-
-    if (!playerState.isCompleted("2")) {
-      let currentXP = playerState.getXP();
-      currentXP += 5;
-      playerState.setXP(currentXP);
-      playerState.markCompleted("2");
-      xpEl.textContent = currentXP;
-
-      xpEl.classList.add('xp-flash');
-      setTimeout(() => xpEl.classList.remove('xp-flash'), 500);
-    }
-
-    // ✅ Show buttons regardless of XP state
-    console.log("Before setting display: block");
-    document.getElementById('completion-buttons').style.display = 'block';
-    console.log("After setting display: block");
-    messageEl.textContent = "✅ Crops successfully planted!";
-    messageEl.classList.add("success");
-
-    setTimeout(() => {
-      gameAreaEl.classList.remove('complete');
-      gameAreaEl.style.borderColor = '#555';
-    }, 1000);
-  } else {
-    gameAreaEl.style.borderColor = '#b00020';
-    messageEl.textContent = "❌ Something’s not right in the soil... Try again.";
-
-    setTimeout(() => {
-      gameAreaEl.style.borderColor = '#555';
-      messageEl.textContent = '';
-
-      placedItems = [];
-      document.querySelectorAll('.grow-slot').forEach(slot => {
-        const item = slot.querySelector('img');
-        if (item) {
-          document.getElementById('toolbox').appendChild(item);
-          item.setAttribute('draggable', 'true');
-          item.style.position = 'static';
-          item.style.margin = '10px';
+        if (
+          centerX > zoneRect.left &&
+          centerX < zoneRect.right &&
+          centerY > zoneRect.top &&
+          centerY < zoneRect.bottom &&
+          !zone.querySelector('.draggable')
+        ) {
+          zone.appendChild(draggedItem);
+          draggedItem.style.position = 'static';
+          placed.add(draggedItem.id);
+          checkCompletion();
+          return;
         }
-      });
-    }, 1000);
+      }
+
+      // Reset position if not placed
+      draggedItem.style.left = '';
+      draggedItem.style.top = '';
+    });
+  });
+
+  function checkCompletion() {
+    if (correctIds.every(id => placed.has(id))) {
+      document.getElementById('game-area').classList.add('complete');
+      completionButtons.style.display = 'block';
+    }
   }
-}
-
-document.getElementById('btn-continue').addEventListener('click', () => {
-  window.location.href = '../Toybox-3/index.html';
-});
-
-document.getElementById('btn-exit').addEventListener('click', () => {
-  console.log('Exit Toybox');
 });
 
 function goToMap() {

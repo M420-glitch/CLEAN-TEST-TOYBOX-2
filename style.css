@@ -8,28 +8,26 @@ body {
 
 h1 {
   margin-top: 20px;
-  color: orange;
 }
 
 #game-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
+  align-items: flex-start;
   gap: 20px;
   margin-top: 20px;
   max-width: 900px;
   margin-left: auto;
   margin-right: auto;
+  flex-wrap: wrap;
 }
 
 #game-area {
   position: relative;
-  width: 100%;
-  max-width: 600px;
+  width: 600px;
   height: 500px;
   background: #d6faff;
   border: 2px dashed #555;
-  overflow: hidden;
 }
 
 #ground-strip {
@@ -62,22 +60,14 @@ h1 {
   z-index: 10;
 }
 
-.grow-slot img {
-  width: 80px;
-  height: auto;
-  display: block;
-  margin: auto;
-}
-
 #toolbox {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   padding: 10px;
   background: #e0f7fa;
-  border-top: 2px solid #444;
-  width: 100%;
+  border-left: 2px solid #444;
+  min-width: 140px;
   z-index: 10;
 }
 
@@ -96,19 +86,12 @@ h1 {
   height: auto;
 }
 
-.draggable span {
-  font-family: monospace;
-  font-size: 14px;
-  margin-top: 4px;
-}
-
 #xp-counter {
   position: absolute;
   top: 10px;
   right: 20px;
   font-family: monospace;
   font-size: 20px;
-  color: #333;
   background: #dfffcf;
   padding: 6px 12px;
   border: 2px solid #6bb96b;
@@ -130,11 +113,6 @@ h1 {
   border: 2px solid #999;
   border-radius: 4px;
   cursor: pointer;
-  transition: background 0.2s;
-}
-
-#completion-buttons button:hover {
-  background-color: #222;
 }
 
 #top-left-controls {
@@ -158,36 +136,30 @@ h1 {
   cursor: pointer;
 }
 
-#top-left-controls button:hover {
-  background: #f8f8b8;
-  color: #111;
+/* ✅ Portrait mode */
+@media (max-width: 768px) {
+  #game-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #toolbox {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-left: none;
+    border-top: 2px solid #444;
+    min-width: 100%;
+  }
+
+  .draggable {
+    width: 60px;
+    margin: 5px;
+    position: relative;
+  }
+
+  .draggable img {
+    width: 60px;
+  }
 }
 
-.game-message {
-  font-family: monospace;
-  font-size: 16px;
-  margin-top: 10px;
-  color: #b00020;
-  text-align: center;
-}
-
-.game-message.success {
-  color: #28a745;
-}
-
-#game-area.complete {
-  box-shadow: 0 0 20px 8px #28a745;
-  transition: box-shadow 0.3s ease-in-out;
-}
-
-.xp-flash {
-  color: #28a745;
-  font-weight: bold;
-  animation: flash 0.4s ease-in-out;
-}
-
-@keyframes flash {
-  0% { transform: scale(1.1); color: #28a745; }
-  50% { transform: scale(1.3); color: #4caf50; }
-  100% { transform: scale(1); color: #28a745; }
-}
