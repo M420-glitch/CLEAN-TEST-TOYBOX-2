@@ -92,6 +92,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  document.querySelectorAll('.grow-slot').forEach(slot => {
+    slot.addEventListener('drop', e => {
+      e.preventDefault();
+
+      if (!draggedItem) return;
+      if (slot.children.length > 0) return;
+
+      draggedItem.style.position = 'relative';
+      draggedItem.style.left = '0px';
+      draggedItem.style.top = '0px';
+      draggedItem.style.width = '80px';
+      draggedItem.style.zIndex = 1;
+      draggedItem.style.margin = 'auto';
+      draggedItem.setAttribute('draggable', 'false');
+
+      slot.appendChild(draggedItem);
+      placed.add(draggedItem.id);
+
+      if (placed.size === 3) checkCompletion();
+      draggedItem = null;
+    });
+  });
+
   function checkCompletion() {
     if (correctIds.every(id => placed.has(id))) {
       document.getElementById('game-area').classList.add('complete');
