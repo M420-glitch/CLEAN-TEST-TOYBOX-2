@@ -74,8 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const touch = e.touches[0];
       draggedItem.style.position = 'absolute';
-      draggedItem.style.left = touch.pageX - (draggedItem.offsetWidth / 2) + 'px';
-      draggedItem.style.top = touch.pageY - (draggedItem.offsetHeight / 2) + 'px';
+      draggedItem.style.left = touch.clientX - (draggedItem.offsetWidth / 2) + 'px';
+      draggedItem.style.top = touch.clientY - (draggedItem.offsetHeight / 2) + 'px';
     }, { passive: false });
 
     drag.addEventListener('touchend', e => {
