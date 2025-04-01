@@ -15,11 +15,15 @@ document.addEventListener('DOMContentLoaded', () => {
     drag.addEventListener('dragstart', e => {
       draggedItem = e.target;
       e.dataTransfer.setData('text/plain', draggedItem.id);
+      e.dataTransfer.effectAllowed = 'move';
     });
   });
 
   dropzones.forEach(zone => {
-    zone.addEventListener('dragover', e => e.preventDefault());
+    zone.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+    });
 
     zone.addEventListener('drop', e => {
       e.preventDefault();
@@ -28,6 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!zone.querySelector('.draggable')) {
         zone.appendChild(item);
         item.style.position = 'static';
+        item.style.left = '';
+        item.style.top = '';
         placed.add(id);
         checkCompletion();
       }
@@ -72,6 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ) {
           zone.appendChild(draggedItem);
           draggedItem.style.position = 'static';
+          draggedItem.style.left = '';
+          draggedItem.style.top = '';
           placed.add(draggedItem.id);
           checkCompletion();
           return;
