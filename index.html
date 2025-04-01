@@ -13,7 +13,7 @@
   </div>
 
   <header>
-    <h1>🌱 Ground Toybox v11</h1>
+    <h1>🌱 Ground Toybox v12</h1>
     <p>Grow crops for the community. Pick 3 essentials from the toolbox. Not everything belongs in the soil.</p>
   </header>
 
@@ -31,11 +31,26 @@
 
     <section id="toolbox">
       <h2>Toolbox:</h2>
-      <img id="seed" src="assets/grow/seed.png" class="draggable" draggable="true" alt="Seed" />
-      <img id="water-can" src="assets/grow/water-can.png" class="draggable" draggable="true" alt="Watering Can" />
-      <img id="sun" src="assets/grow/sun.png" class="draggable" draggable="true" alt="Sunlight" />
-      <img id="cola" src="assets/grow/cola.png" class="draggable" draggable="true" alt="Cola" />
-      <img id="flatscreen" src="assets/grow/flatscreen.png" class="draggable" draggable="true" alt="Flatscreen" />
+      <div class="draggable" id="seed" draggable="true">
+        <img src="assets/grow/seed.png" alt="Seed" />
+        <span>Seed</span>
+      </div>
+      <div class="draggable" id="water-can" draggable="true">
+        <img src="assets/grow/water-can.png" alt="Watering Can" />
+        <span>Watering Can</span>
+      </div>
+      <div class="draggable" id="sun" draggable="true">
+        <img src="assets/grow/sun.png" alt="Sunlight" />
+        <span>Sunlight</span>
+      </div>
+      <div class="draggable" id="cola" draggable="true">
+        <img src="assets/grow/cola.png" alt="Cola" />
+        <span>Cola</span>
+      </div>
+      <div class="draggable" id="flatscreen" draggable="true">
+        <img src="assets/grow/flatscreen.png" alt="Flatscreen" />
+        <span>Flatscreen</span>
+      </div>
     </section>
   </main>
 
@@ -48,6 +63,7 @@
     <button id="btn-exit">Exit</button>
   </div>
 
+  <script src="../playerState.js"></script>
   <script src="game.js"></script>
 
 </body>

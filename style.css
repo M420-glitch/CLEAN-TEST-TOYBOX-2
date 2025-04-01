@@ -28,10 +28,8 @@ h1 {
   height: 500px;
   background: #d6faff;
   border: 2px dashed #555;
-}
-
-#game-area.complete {
-  border-color: #28a745; /* Green border when complete */
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 #ground-strip {
@@ -70,7 +68,7 @@ h1 {
 
 #toolbox {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Stacked vertically by default */
   align-items: center;
   padding: 10px;
   background: #e0f7fa;
@@ -86,7 +84,7 @@ h1 {
   margin: 10px;
   cursor: grab;
   width: 80px;
-  position: relative;
+  position: relative; /* Changed from absolute to relative */
 }
 
 .draggable img {
@@ -168,6 +166,30 @@ h1 {
 
   .draggable img {
     width: 60px !important;
+  }
+
+  /* Landscape mode adjustments for mobile */
+  @media (orientation: landscape) {
+    #game-container {
+      /* Keep portrait layout */
+      flex-direction: column !important;
+      align-items: center !important;
+    }
+
+    #game-area {
+      /* Use portrait dimensions */
+      width: 100% !important;
+      max-width: 600px !important;
+      height: auto !important;
+    }
+
+    #toolbox {
+      /* Use portrait toolbox layout */
+      flex-direction: row !important;
+      border-left: none !important;
+      border-top: 2px solid #444 !important;
+      min-width: 100% !important;
+    }
   }
 }
 

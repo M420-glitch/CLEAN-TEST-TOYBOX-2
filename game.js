@@ -10,6 +10,33 @@ document.addEventListener('DOMContentLoaded', () => {
   const correctIds = ['seed', 'water-can', 'sun'];
   const placed = new Set();
 
+  // Function to apply portrait layout
+  function applyPortraitLayout() {
+    document.getElementById('game-container').style.flexDirection = 'column';
+    document.getElementById('game-container').style.alignItems = 'center';
+    document.getElementById('toolbox').style.flexDirection = 'row';
+    document.getElementById('toolbox').style.borderLeft = 'none';
+    document.getElementById('toolbox').style.borderTop = '2px solid #444';
+    document.getElementById('toolbox').style.minWidth = '100%';
+  }
+
+  // Function to check orientation and apply layout
+  function checkOrientation() {
+    if (window.innerWidth < window.innerHeight) {
+      // Portrait mode
+      applyPortraitLayout();
+    } else {
+      // Landscape mode - force portrait layout
+      applyPortraitLayout();
+    }
+  }
+
+  // Initial check and apply layout
+  checkOrientation();
+
+  // Listen for orientation changes
+  window.addEventListener('orientationchange', checkOrientation);
+
   // Desktop drag events
   draggables.forEach(drag => {
     drag.addEventListener('dragstart', e => {
