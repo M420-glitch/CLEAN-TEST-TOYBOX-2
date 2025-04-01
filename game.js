@@ -40,8 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
       isDragging = true;
       draggedItem = drag;
       const touch = e.touches[0];
-      touchOffsetX = touch.clientX - draggedItem.getBoundingClientRect().left;
-      touchOffsetY = touch.clientY - draggedItem.getBoundingClientRect().top;
+      touchOffsetX = touch.pageX - draggedItem.offsetLeft;
+      touchOffsetY = touch.pageY - draggedItem.offsetTop;
       draggedItem.style.zIndex = 999;
     });
 
@@ -49,8 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!isDragging) return;
       e.preventDefault();
       const touch = e.touches[0];
-      draggedItem.style.left = (touch.clientX - touchOffsetX) + 'px';
-      draggedItem.style.top = (touch.clientY - touchOffsetY) + 'px';
+      draggedItem.style.left = (touch.pageX - touchOffsetX) + 'px';
+      draggedItem.style.top = (touch.pageY - touchOffsetY) + 'px';
     }, { passive: false });
 
     drag.addEventListener('touchend', e => {
