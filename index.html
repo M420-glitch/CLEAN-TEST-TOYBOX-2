@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ground Toybox Test #4</title>
+
+  <!-- 3-way CSS inclusion -->
+  <link rel="stylesheet" href="desktopstyle.css" media="screen and (min-width: 769px)" />
+  <link rel="stylesheet" href="portraitstyle.css" media="screen and (max-width: 768px) and (orientation: portrait)" />
+  <link rel="stylesheet" href="landscapestyle.css" media="screen and (max-width: 1024px) and (orientation: landscape)" />
+</head>
+<body>
+  <div id="top-left-controls">
+    <button onclick="goToMap()">🗺️ Progress Map</button>
+    <button onclick="saveAndExit()">💾 Save & Exit</button>
+  </div>
+
+  <h1>🌱 Ground Toybox 2</h1>
+  <p>Grow crops for the community. Pick 3 essentials from the toolbox. Not everything belongs in the soil.</p>
+
+  <div id="game-container">
+    <div id="game-area">
+      <div id="grow-dropzone">
+        <div class="grow-slot" data-slot="1"></div>
+        <div class="grow-slot" data-slot="2"></div>
+        <div class="grow-slot" data-slot="3"></div>
+      </div>
+      <div id="ground-strip"></div>
+    </div>
+  </div>
+
+  <div id="toolbox">
+    <p>Toolbox:</p>
+    <img id="seed" src="assets/grow/seed.png" class="draggable" draggable="true" title="Seed" />
+    <img id="water-can" src="assets/grow/water-can.png" class="draggable" draggable="true" title="Watering Can" />
+    <img id="sun" src="assets/grow/sun.png" class="draggable" draggable="true" title="Sunlight" />
+    <img id="cola" src="assets/grow/cola.png" class="draggable" draggable="true" title="Can of Cola" />
+    <img id="flatscreen" src="assets/grow/flatscreen.png" class="draggable" draggable="true" title="Flat Screen TV" />
+  </div>
+
+  <p id="game-message" class="game-message"></p>
+
+  <div id="xp-counter">XP: <span id="xp-value">--</span></div>
+
+  <div id="completion-buttons" style="display: none;">
+    <button id="btn-continue">Continue</button>
+    <button id="btn-exit">Exit</button>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="../playerState.js"></script>
+  <script src="game.js?v=3"></script>
+</body>
+</html>
