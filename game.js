@@ -10,19 +10,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const correctIds = ['seed', 'water-can', 'sun'];
   const placed = new Set();
 
-  // Desktop drag events
+  // --- Desktop drag events ---
   draggables.forEach(drag => {
     drag.addEventListener('dragstart', e => {
       draggedItem = e.target;
-      e.dataTransfer.setData('text/plain', draggedItem.id);
-      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', draggedItem.id); // Ensure data is set
+      e.dataTransfer.effectAllowed = 'move'; // Add this line
     });
   });
 
   dropzones.forEach(zone => {
     zone.addEventListener('dragover', e => {
       e.preventDefault();
-      e.dataTransfer.dropEffect = 'move';
+      e.dataTransfer.dropEffect = 'move'; // Add this line
     });
 
     zone.addEventListener('drop', e => {
@@ -32,22 +32,23 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!zone.querySelector('.draggable')) {
         zone.appendChild(item);
         item.style.position = 'static';
-        item.style.left = '';
-        item.style.top = '';
+        item.style.left = ''; // Clear inline styles
+        item.style.top = '';  // Clear inline styles
         placed.add(id);
         checkCompletion();
       }
     });
   });
 
-  // Mobile drag logic
+  // --- Mobile drag logic ---
   draggables.forEach(drag => {
     drag.addEventListener('touchstart', e => {
       isDragging = true;
       draggedItem = drag;
       const touch = e.touches[0];
-      touchOffsetX = touch.clientX - draggedItem.getBoundingClientRect().left;
-      touchOffsetY = touch.clientY - draggedItem.getBoundingClientRect().top;
+      const rect = draggedItem.getBoundingClientRect();
+      touchOffsetX = touch.clientX - rect.left;
+      touchOffsetY = touch.clientY - rect.top;
       draggedItem.style.zIndex = 999;
     });
 
@@ -78,8 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ) {
           zone.appendChild(draggedItem);
           draggedItem.style.position = 'static';
-          draggedItem.style.left = '';
-          draggedItem.style.top = '';
+          draggedItem.style.left = ''; // Clear inline styles
+          draggedItem.style.top = '';  // Clear inline styles
           placed.add(draggedItem.id);
           checkCompletion();
           return;
