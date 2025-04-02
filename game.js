@@ -6,71 +6,41 @@ document.addEventListener('DOMContentLoaded', () => {
   const resultText = document.getElementById('result-text');
   const tryAgainBtn = document.getElementById('try-again');
 
-  let isDragging = false;
-  let activeItem = null;
-  let touchStartX = 0;
-  let touchStartY = 0;
+  let activeClone = null;
+  let activeOriginal = null;
+  let offsetX = 0;
+  let offsetY = 0;
 
-  // Desktop drag
-  draggables.forEach(dragItem => {
-    dragItem.addEventListener('dragstart', (event) => {
-      isDragging = true;
-      activeItem = dragItem;
-      event.dataTransfer.setData('text/plain', dragItem.id);
+  draggables.forEach(el => {
+    el.addEventListener('touchstart', (event) => {
+      activeOriginal = el;
+
+      const rect = el.getBoundingClientRect();
+      offsetX = event.touches[0].clientX - rect.left;
+      offsetY = event.touches[0].clientY - rect.top;
+
+      activeClone = el.cloneNode(true);
+      activeClone.classList.add('clone');
+      document.body.appendChild(activeClone);
+      moveClone(event.touches[0].clientX, event.touches[0].clientY);
     });
-  });
 
-  dropAreas.forEach(dropArea => {
-    dropArea.addEventListener('dragover', (event) => event.preventDefault());
-
-    dropArea.addEventListener('drop', (event) => {
+    el.addEventListener('touchmove', (event) => {
+      if (!activeClone) return;
       event.preventDefault();
-      if (!isDragging || !activeItem) return;
-      dropArea.appendChild(activeItem);
-      activeItem.style.position = 'static';
-      isDragging = false;
-      activeItem = null;
-      checkCompletion();
-    });
-  });
-
-  // Mobile drag
-  draggables.forEach(dragItem => {
-    dragItem.addEventListener('touchstart', (event) => {
-      isDragging = true;
-      activeItem = dragItem;
-
-      const rect = dragItem.getBoundingClientRect();
-      touchStartX = event.touches[0].clientX - rect.left;
-      touchStartY = event.touches[0].clientY - rect.top;
-
-      document.body.appendChild(dragItem);
-      dragItem.classList.add('drag-floating');
-
-      dropAreas.forEach(zone => zone.style.pointerEvents = 'none');
-    });
-
-    dragItem.addEventListener('touchmove', (event) => {
-      if (!isDragging || !activeItem) return;
-      event.preventDefault();
-
-      const touchX = event.touches[0].clientX;
-      const touchY = event.touches[0].clientY;
-
-      activeItem.style.left = (touchX - touchStartX) + 'px';
-      activeItem.style.top = (touchY - touchStartY) + 'px';
+      moveClone(event.touches[0].clientX, event.touches[0].clientY);
     }, { passive: false });
 
-    dragItem.addEventListener('touchend', () => {
-      if (!isDragging || !activeItem) return;
+    el.addEventListener('touchend', () => {
+      if (!activeClone || !activeOriginal) return;
 
-      const dragRect = activeItem.getBoundingClientRect();
-      let placed = false;
+      const cloneRect = activeClone.getBoundingClientRect();
+      let dropped = false;
 
-      dropAreas.forEach(dropArea => {
-        const dropRect = dropArea.getBoundingClientRect();
-        const centerX = dragRect.left + dragRect.width / 2;
-        const centerY = dragRect.top + dragRect.height / 2;
+      dropAreas.forEach(drop => {
+        const dropRect = drop.getBoundingClientRect();
+        const centerX = cloneRect.left + cloneRect.width / 2;
+        const centerY = cloneRect.top + cloneRect.height / 2;
 
         const isInside =
           centerX >= dropRect.left &&
@@ -79,36 +49,37 @@ document.addEventListener('DOMContentLoaded', () => {
           centerY <= dropRect.bottom;
 
         if (isInside) {
-          dropArea.appendChild(activeItem);
-          activeItem.style.position = 'static';
-          activeItem.classList.remove('drag-floating');
-          placed = true;
+          drop.appendChild(activeOriginal);
+          activeOriginal.style.position = 'static';
+          dropped = true;
         }
       });
 
-      if (!placed) {
-        dragArea.appendChild(activeItem);
-        Object.assign(activeItem.style, {
-          position: 'absolute',
-          left: '',
-          top: '',
-          zIndex: 1000
-        });
-        activeItem.classList.remove('drag-floating');
+      if (!dropped) {
+        dragArea.appendChild(activeOriginal);
+        activeOriginal.style.left = '';
+        activeOriginal.style.top = '';
+        activeOriginal.style.position = 'absolute';
       }
 
-      dropAreas.forEach(zone => zone.style.pointerEvents = '');
-      isDragging = false;
-      activeItem = null;
+      document.body.removeChild(activeClone);
+      activeClone = null;
+      activeOriginal = null;
+
       checkCompletion();
     });
   });
+
+  function moveClone(x, y) {
+    activeClone.style.left = (x - offsetX) + 'px';
+    activeClone.style.top = (y - offsetY) + 'px';
+  }
 
   function checkCompletion() {
     const drag1 = document.getElementById('drag1');
     const drag2 = document.getElementById('drag2');
 
-    const inCorrectPlace =
+    const correct =
       drag1.parentElement.id === drag1.dataset.target &&
       drag2.parentElement.id === drag2.dataset.target;
 
@@ -118,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (allPlaced) {
       messageBox.style.display = 'block';
-      if (inCorrectPlace) {
+      if (correct) {
         resultText.textContent = "✅ Success! Both items correctly placed.";
         messageBox.classList.remove('fail');
       } else {
@@ -136,11 +107,11 @@ document.addEventListener('DOMContentLoaded', () => {
     dragArea.appendChild(drag2);
 
     Object.assign(drag1.style, {
-      left: '20px', top: '20px', position: 'absolute', zIndex: 1000
+      left: '20px', top: '20px', position: 'absolute'
     });
 
     Object.assign(drag2.style, {
-      left: '100px', top: '20px', position: 'absolute', zIndex: 1000
+      left: '100px', top: '20px', position: 'absolute'
     });
 
     messageBox.style.display = 'none';
