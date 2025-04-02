@@ -2,25 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Matching Drag and Drop – Clone Mode</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Toybox 2 – Mobile Portrait v0.1</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Matching Drag and Drop 9 – Clone Mode</h1>
+  <div id="xp-bar">XP: 40</div>
 
   <div id="game-container">
-    <div id="drag-area">
-      <div id="drag1" class="draggable" data-target="drop-area-1">A</div>
-      <div id="drag2" class="draggable" data-target="drop-area-2">B</div>
-    </div>
-    <div id="drop-area-1" class="drop-area">Drop Zone 1</div>
-    <div id="drop-area-2" class="drop-area">Drop Zone 2</div>
-  </div>
+    <div id="drop-zone">Drop Items Here</div>
 
-  <div id="completion-message" style="display:none;">
-    <h2 id="result-text"></h2>
-    <button id="try-again">Try Again</button>
+    <div id="toolbox">
+      <div class="draggable" data-value="A">A</div>
+      <div class="draggable" data-value="B">B</div>
+      <div class="draggable" data-value="C">C</div>
+      <div class="draggable" data-value="D">D</div>
+    </div>
+
+    <div id="result-box" style="display:none;">
+      <h2 id="result-text"></h2>
+      <button id="try-again">Try Again</button>
+    </div>
   </div>
 
   <script src="game.js"></script>

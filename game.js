@@ -1,15 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
   const draggables = document.querySelectorAll('.draggable');
-  const dropAreas = document.querySelectorAll('.drop-area');
-  const dragArea = document.getElementById('drag-area');
-  const messageBox = document.getElementById('completion-message');
+  const dropZone = document.getElementById('drop-zone');
+  const resultBox = document.getElementById('result-box');
   const resultText = document.getElementById('result-text');
   const tryAgainBtn = document.getElementById('try-again');
-
   let activeClone = null;
   let activeOriginal = null;
   let offsetX = 0;
   let offsetY = 0;
+
+  let droppedItems = [];
 
   draggables.forEach(el => {
     el.addEventListener('touchstart', (event) => {
@@ -35,38 +35,31 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!activeClone || !activeOriginal) return;
 
       const cloneRect = activeClone.getBoundingClientRect();
-      let dropped = false;
+      const dropRect = dropZone.getBoundingClientRect();
+      const centerX = cloneRect.left + cloneRect.width / 2;
+      const centerY = cloneRect.top + cloneRect.height / 2;
 
-      dropAreas.forEach(drop => {
-        const dropRect = drop.getBoundingClientRect();
-        const centerX = cloneRect.left + cloneRect.width / 2;
-        const centerY = cloneRect.top + cloneRect.height / 2;
+      const isInside =
+        centerX >= dropRect.left &&
+        centerX <= dropRect.right &&
+        centerY >= dropRect.top &&
+        centerY <= dropRect.bottom;
 
-        const isInside =
-          centerX >= dropRect.left &&
-          centerX <= dropRect.right &&
-          centerY >= dropRect.top &&
-          centerY <= dropRect.bottom;
-
-        if (isInside) {
-          drop.appendChild(activeOriginal);
-          activeOriginal.style.position = 'static';
-          dropped = true;
+      if (isInside) {
+        const value = activeOriginal.dataset.value;
+        if (!droppedItems.includes(value)) {
+          droppedItems.push(value);
+          const placed = activeOriginal.cloneNode(true);
+          placed.classList.remove('draggable');
+          dropZone.appendChild(placed);
         }
-      });
-
-      if (!dropped) {
-        dragArea.appendChild(activeOriginal);
-        activeOriginal.style.left = '';
-        activeOriginal.style.top = '';
-        activeOriginal.style.position = 'absolute';
       }
 
       document.body.removeChild(activeClone);
       activeClone = null;
       activeOriginal = null;
 
-      checkCompletion();
+      checkResult();
     });
   });
 
@@ -75,46 +68,28 @@ document.addEventListener('DOMContentLoaded', () => {
     activeClone.style.top = (y - offsetY) + 'px';
   }
 
-  function checkCompletion() {
-    const drag1 = document.getElementById('drag1');
-    const drag2 = document.getElementById('drag2');
+  function checkResult() {
+    if (droppedItems.length >= 3) {
+      const hasD = droppedItems.includes('D');
+      const valid = droppedItems.includes('A') + droppedItems.includes('B') + droppedItems.includes('C');
 
-    const correct =
-      drag1.parentElement.id === drag1.dataset.target &&
-      drag2.parentElement.id === drag2.dataset.target;
+      resultBox.style.display = 'block';
+      resultBox.classList.remove('success', 'fail');
 
-    const allPlaced = [drag1, drag2].every(el =>
-      el.parentElement.classList.contains('drop-area')
-    );
-
-    if (allPlaced) {
-      messageBox.style.display = 'block';
-      if (correct) {
-        resultText.textContent = "✅ Success! Both items correctly placed.";
-        messageBox.classList.remove('fail');
+      if (hasD || valid < 3) {
+        resultText.textContent = "❌ Incorrect! D should not be used.";
+        resultBox.classList.add('fail');
       } else {
-        resultText.textContent = "❌ Incorrect match. Try again.";
-        messageBox.classList.add('fail');
+        resultText.textContent = "✅ Success! You used A, B, C correctly.";
+        resultBox.classList.add('success');
       }
     }
   }
 
   tryAgainBtn.addEventListener('click', () => {
-    const drag1 = document.getElementById('drag1');
-    const drag2 = document.getElementById('drag2');
-
-    dragArea.appendChild(drag1);
-    dragArea.appendChild(drag2);
-
-    Object.assign(drag1.style, {
-      left: '20px', top: '20px', position: 'absolute'
-    });
-
-    Object.assign(drag2.style, {
-      left: '100px', top: '20px', position: 'absolute'
-    });
-
-    messageBox.style.display = 'none';
-    messageBox.classList.remove('fail');
+    dropZone.innerHTML = "Drop Items Here";
+    droppedItems = [];
+    resultBox.style.display = 'none';
+    resultBox.classList.remove('fail', 'success');
   });
 });
