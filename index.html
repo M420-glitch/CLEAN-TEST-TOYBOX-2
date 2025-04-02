@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Toybox Toolbox Grid</title>
+  <title>Viewport Locked Toybox</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,59 +12,12 @@
   <div id="game-container">
     <div id="grid-board">
       <!-- 6x6 grid -->
-      <!-- Indexes 0–35 -->
-      <div class="cell" data-index="0"></div>
-      <div class="cell" data-index="1"></div>
-      <div class="cell" data-index="2"></div>
-      <div class="cell" data-index="3"></div>
-      <div class="cell" data-index="4"></div>
-      <div class="cell" data-index="5"></div>
-      <div class="cell" data-index="6"></div>
-      <div class="cell" data-index="7"></div>
-      <div class="cell" data-index="8"></div>
-      <div class="cell" data-index="9"></div>
-      <div class="cell" data-index="10"></div>
-      <div class="cell" data-index="11"></div>
-      <div class="cell" data-index="12"></div>
-      <div class="cell" data-index="13"></div>
-      <div class="cell" data-index="14"></div>
-      <div class="cell" data-index="15"></div>
-      <div class="cell" data-index="16"></div>
-      <div class="cell" data-index="17"></div>
-      <div class="cell" data-index="18"></div>
-      <div class="cell" data-index="19"></div>
-      <div class="cell" data-index="20"></div>
-      <div class="cell" data-index="21"></div>
-      <div class="cell" data-index="22"></div>
-      <div class="cell" data-index="23"></div>
-      <div class="cell" data-index="24"></div>
-      <div class="cell" data-index="25"></div>
-      <div class="cell" data-index="26"></div>
-      <div class="cell" data-index="27"></div>
-      <div class="cell" data-index="28"></div>
-      <div class="cell" data-index="29"></div>
-      <div class="cell" data-index="30"></div>
-      <div class="cell" data-index="31"></div>
-      <div class="cell" data-index="32"></div>
-      <div class="cell" data-index="33"></div>
-      <div class="cell" data-index="34"></div>
-      <div class="cell" data-index="35"></div>
+      <!-- 36 squares -->
+      ${[...Array(36).keys()].map(i => `<div class="cell" data-index="${i}"></div>`).join('')}
     </div>
 
     <div id="toolbox">
-      <!-- 12 draggable items -->
-      <div class="draggable" data-value="1">1</div>
-      <div class="draggable" data-value="2">2</div>
-      <div class="draggable" data-value="3">3</div>
-      <div class="draggable" data-value="4">4</div>
-      <div class="draggable" data-value="5">5</div>
-      <div class="draggable" data-value="6">6</div>
-      <div class="draggable" data-value="7">7</div>
-      <div class="draggable" data-value="8">8</div>
-      <div class="draggable" data-value="9">9</div>
-      <div class="draggable" data-value="10">10</div>
-      <div class="draggable" data-value="11">11</div>
-      <div class="draggable" data-value="12">12</div>
+      ${[...Array(12).keys()].map(i => `<div class="draggable" data-value="${i + 1}">${i + 1}</div>`).join('')}
     </div>
 
     <div id="result-box" style="display:none;">
@@ -74,5 +27,19 @@
   </div>
 
   <script src="game.js"></script>
+  <script>
+    // 💡 Viewport Height Lock
+    const setVh = () => {
+      document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+      document.getElementById('game-container').style.height = `${window.innerHeight}px`;
+    };
+    setVh();
+    window.addEventListener('resize', setVh);
+
+    // 💡 Force hide browser chrome (simulate fullscreen)
+    window.addEventListener('load', () => {
+      setTimeout(() => window.scrollTo(0, 1), 10);
+    });
+  </script>
 </body>
 </html>

@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
   draggables.forEach(el => {
     el.addEventListener('touchstart', (event) => {
       activeOriginal = el;
-
       const rect = el.getBoundingClientRect();
       offsetX = event.touches[0].clientX - rect.left;
       offsetY = event.touches[0].clientY - rect.top;

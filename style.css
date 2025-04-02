@@ -3,7 +3,7 @@ html, body {
   padding: 0;
   overflow: hidden;
   width: 100%;
-  height: 100dvh;
+  height: calc(var(--vh, 1vh) * 100);
   touch-action: none;
   background-color: #fff;
   font-family: sans-serif;
@@ -23,13 +23,14 @@ html, body {
 
 #game-container {
   width: 100vw;
-  height: 100dvh;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   box-sizing: border-box;
   padding-top: 50px;
+  height: 100%;
 }
 
 #grid-board {
@@ -52,13 +53,12 @@ html, body {
 }
 
 #toolbox {
-  width: 100%;
-  max-width: 324px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 6px;
-  padding: 0 8px;
+  max-width: 324px;
+  padding: 8px;
 }
 
 .draggable {
