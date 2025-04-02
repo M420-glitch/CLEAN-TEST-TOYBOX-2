@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let touchStartX = 0;
   let touchStartY = 0;
 
-  // Drag (desktop)
+  // Desktop drag
   draggables.forEach(dragItem => {
     dragItem.addEventListener('dragstart', (event) => {
       isDragging = true;
@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   dropAreas.forEach(dropArea => {
     dropArea.addEventListener('dragover', (event) => event.preventDefault());
+
     dropArea.addEventListener('drop', (event) => {
       event.preventDefault();
       if (!isDragging || !activeItem) return;
@@ -33,20 +34,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Touch (mobile)
+  // Touch support (mobile)
   draggables.forEach(dragItem => {
     dragItem.addEventListener('touchstart', (event) => {
       isDragging = true;
       activeItem = dragItem;
       touchStartX = event.touches[0].clientX - dragItem.offsetLeft;
       touchStartY = event.touches[0].clientY - dragItem.offsetTop;
+      dragItem.classList.add('dragging'); // 🔥 key fix
     });
 
     dragItem.addEventListener('touchmove', (event) => {
       if (!isDragging || !activeItem) return;
       event.preventDefault();
+
       const touchX = event.touches[0].clientX;
       const touchY = event.touches[0].clientY;
+
       activeItem.style.left = (touchX - touchStartX) + 'px';
       activeItem.style.top = (touchY - touchStartY) + 'px';
     }, { passive: false });
@@ -54,19 +58,18 @@ document.addEventListener('DOMContentLoaded', () => {
     dragItem.addEventListener('touchend', () => {
       if (!isDragging || !activeItem) return;
       const dragRect = activeItem.getBoundingClientRect();
-
       let placed = false;
+
       dropAreas.forEach(dropArea => {
         const dropRect = dropArea.getBoundingClientRect();
         const centerX = dragRect.left + dragRect.width / 2;
         const centerY = dragRect.top + dragRect.height / 2;
 
-        const isInside = (
+        const isInside =
           centerX >= dropRect.left &&
           centerX <= dropRect.right &&
           centerY >= dropRect.top &&
-          centerY <= dropRect.bottom
-        );
+          centerY <= dropRect.bottom;
 
         if (isInside) {
           dropArea.appendChild(activeItem);
@@ -80,13 +83,13 @@ document.addEventListener('DOMContentLoaded', () => {
         activeItem.style.top = '';
       }
 
+      activeItem.classList.remove('dragging'); // remove fix
       isDragging = false;
       activeItem = null;
       checkCompletion();
     });
   });
 
-  // ✅ Check result
   function checkCompletion() {
     const drag1 = document.getElementById('drag1');
     const drag2 = document.getElementById('drag2');
@@ -95,7 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
       drag1.parentElement.id === drag1.dataset.target &&
       drag2.parentElement.id === drag2.dataset.target;
 
-    const allPlaced = [drag1, drag2].every(el => el.parentElement.classList.contains('drop-area'));
+    const allPlaced = [drag1, drag2].every(el =>
+      el.parentElement.classList.contains('drop-area')
+    );
 
     if (allPlaced) {
       messageBox.style.display = 'block';
@@ -109,13 +114,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 🔄 Reset
   tryAgainBtn.addEventListener('click', () => {
-    dragArea.appendChild(document.getElementById('drag1'));
-    dragArea.appendChild(document.getElementById('drag2'));
+    const drag1 = document.getElementById('drag1');
+    const drag2 = document.getElementById('drag2');
 
-    Object.assign(document.getElementById('drag1').style, { left: '20px', top: '0', position: 'absolute' });
-    Object.assign(document.getElementById('drag2').style, { left: '100px', top: '0', position: 'absolute' });
+    dragArea.appendChild(drag1);
+    dragArea.appendChild(drag2);
+
+    Object.assign(drag1.style, {
+      left: '20px', top: '20px', position: 'absolute', zIndex: 1000
+    });
+
+    Object.assign(drag2.style, {
+      left: '100px', top: '20px', position: 'absolute', zIndex: 1000
+    });
 
     messageBox.style.display = 'none';
     messageBox.classList.remove('fail');
