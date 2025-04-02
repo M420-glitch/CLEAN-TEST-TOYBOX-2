@@ -51,13 +51,12 @@ body {
   top: 20px;
 }
 
-.draggable.dragging {
+.drag-floating {
   width: 40px;
   height: 40px;
   position: fixed !important;
-  z-index: 9999 !important;
+  z-index: 999999 !important;
   pointer-events: none;
-  transform: none;
 }
 
 #completion-message {
