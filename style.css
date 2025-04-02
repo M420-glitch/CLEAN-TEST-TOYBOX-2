@@ -20,12 +20,12 @@ body {
   position: relative;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
 }
 
 .draggable {
-  width: 40px; /* 20% of 200px */
+  width: 40px;
   height: 40px;
   background-color: #4CAF50;
   color: white;
@@ -35,10 +35,28 @@ body {
   position: absolute;
 }
 
+#drag1 {
+  left: 20px;
+}
+
+#drag2 {
+  left: 100px;
+}
+
 #completion-message {
-  margin-top: 20px;
+  margin-top: 30px;
   font-size: 20px;
   color: green;
+}
+
+#completion-message.fail {
+  color: red;
+}
+
+#try-again {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
 }
 
 @media (max-width: 768px) {

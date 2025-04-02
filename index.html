@@ -3,23 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Drag and Drop x2</title>
+  <title>Matching Drag and Drop</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Drag and Drop x2</h1>
+  <h1>Matching Drag and Drop</h1>
 
   <div id="game-container">
     <div id="drag-area">
-      <div id="drag1" class="draggable" draggable="true">A</div>
-      <div id="drag2" class="draggable" draggable="true">B</div>
+      <div id="drag1" class="draggable" draggable="true" data-target="drop-area-1">A</div>
+      <div id="drag2" class="draggable" draggable="true" data-target="drop-area-2">B</div>
     </div>
     <div id="drop-area-1" class="drop-area">Drop Zone 1</div>
     <div id="drop-area-2" class="drop-area">Drop Zone 2</div>
   </div>
 
   <div id="completion-message" style="display:none;">
-    <h2>Completed!</h2>
+    <h2 id="result-text"></h2>
+    <button id="try-again">Try Again</button>
   </div>
 
   <script src="game.js"></script>
