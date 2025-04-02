@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let touchStartX = 0;
   let touchStartY = 0;
 
-  // Desktop drag support
+  // Desktop drag
   draggables.forEach(dragItem => {
     dragItem.addEventListener('dragstart', (event) => {
       isDragging = true;
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Mobile touch support
+  // Mobile drag
   draggables.forEach(dragItem => {
     dragItem.addEventListener('touchstart', (event) => {
       isDragging = true;
@@ -44,9 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
       touchStartX = event.touches[0].clientX - rect.left;
       touchStartY = event.touches[0].clientY - rect.top;
 
-      dragItem.style.position = 'fixed';
-      dragItem.style.zIndex = 9999;
-      dragItem.classList.add('dragging');
+      document.body.appendChild(dragItem);
+      dragItem.classList.add('drag-floating');
+
+      dropAreas.forEach(zone => zone.style.pointerEvents = 'none');
     });
 
     dragItem.addEventListener('touchmove', (event) => {
@@ -80,17 +81,23 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isInside) {
           dropArea.appendChild(activeItem);
           activeItem.style.position = 'static';
+          activeItem.classList.remove('drag-floating');
           placed = true;
         }
       });
 
       if (!placed) {
-        activeItem.style.position = 'absolute';
-        activeItem.style.left = '';
-        activeItem.style.top = '';
+        dragArea.appendChild(activeItem);
+        Object.assign(activeItem.style, {
+          position: 'absolute',
+          left: '',
+          top: '',
+          zIndex: 1000
+        });
+        activeItem.classList.remove('drag-floating');
       }
 
-      activeItem.classList.remove('dragging');
+      dropAreas.forEach(zone => zone.style.pointerEvents = '');
       isDragging = false;
       activeItem = null;
       checkCompletion();

@@ -25,6 +25,13 @@ body {
   justify-content: space-around;
   align-items: center;
   z-index: 1;
+
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+#drag-area {
+  isolation: isolate;
 }
 
 .draggable {
@@ -39,6 +46,9 @@ body {
   z-index: 1000;
   transition: left 0.2s, top 0.2s;
   pointer-events: auto;
+
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 #drag1 {
@@ -51,12 +61,13 @@ body {
   top: 20px;
 }
 
-.drag-floating {
+.draggable.drag-floating {
   width: 40px;
   height: 40px;
   position: fixed !important;
   z-index: 999999 !important;
   pointer-events: none;
+  transform: none;
 }
 
 #completion-message {
