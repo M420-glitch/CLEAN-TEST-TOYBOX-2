@@ -39,7 +39,7 @@ html, body {
   grid-template-columns: repeat(6, 54px);
   grid-template-rows: repeat(6, 54px);
   gap: 2px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .cell {
@@ -52,36 +52,34 @@ html, body {
 }
 
 #toolbox {
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  max-width: 324px;
+  width: 324px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 8px;
   margin-bottom: 20px;
 }
 
 .draggable {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   background-color: #4CAF50;
   color: white;
-  font-size: 24px;
+  font-size: 22px;
   text-align: center;
-  line-height: 60px;
+  line-height: 70px;
   border-radius: 8px;
-  margin: 10px;
   z-index: 10;
 }
 
 .clone {
   position: fixed;
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   background-color: rgba(76, 175, 80, 0.9);
   color: white;
-  font-size: 24px;
+  font-size: 22px;
   text-align: center;
-  line-height: 60px;
+  line-height: 70px;
   border-radius: 8px;
   z-index: 9999;
   pointer-events: none;
@@ -94,13 +92,6 @@ html, body {
 
 #result-text {
   font-size: 20px;
-}
-
-#result-box.fail #result-text {
-  color: red;
-}
-
-#result-box.success #result-text {
   color: green;
 }
 

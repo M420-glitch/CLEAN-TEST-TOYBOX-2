@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const draggables = document.querySelectorAll('.draggable');
   const cells = document.querySelectorAll('.cell');
   const resultBox = document.getElementById('result-box');
-  const resultText = document.getElementById('result-text');
   const tryAgainBtn = document.getElementById('try-again');
 
   let activeClone = null;
@@ -52,10 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
           const value = activeOriginal.dataset.value;
           if (!droppedItems.includes(value)) {
             droppedItems.push(value);
+            const placed = activeOriginal.cloneNode(true);
+            placed.classList.remove('draggable');
+            cell.appendChild(placed);
           }
-          const placed = activeOriginal.cloneNode(true);
-          placed.classList.remove('draggable');
-          cell.appendChild(placed);
         }
       });
 
@@ -63,7 +62,9 @@ document.addEventListener('DOMContentLoaded', () => {
       activeClone = null;
       activeOriginal = null;
 
-      checkResult();
+      if (droppedItems.length === 12) {
+        resultBox.style.display = 'block';
+      }
     });
   });
 
@@ -72,28 +73,9 @@ document.addEventListener('DOMContentLoaded', () => {
     activeClone.style.top = (y - offsetY) + 'px';
   }
 
-  function checkResult() {
-    if (droppedItems.length >= 3) {
-      const hasD = droppedItems.includes('D');
-      const valid = droppedItems.includes('A') + droppedItems.includes('B') + droppedItems.includes('C');
-
-      resultBox.style.display = 'block';
-      resultBox.classList.remove('success', 'fail');
-
-      if (hasD || valid < 3) {
-        resultText.textContent = "❌ Incorrect! D should not be used.";
-        resultBox.classList.add('fail');
-      } else {
-        resultText.textContent = "✅ Success! You used A, B, C correctly.";
-        resultBox.classList.add('success');
-      }
-    }
-  }
-
   tryAgainBtn.addEventListener('click', () => {
     cells.forEach(cell => cell.innerHTML = '');
     droppedItems = [];
     resultBox.style.display = 'none';
-    resultBox.classList.remove('fail', 'success');
   });
 });
