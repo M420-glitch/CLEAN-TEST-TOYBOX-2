@@ -1,12 +1,19 @@
-html, body {
+/* --- CSS RESET --- */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+/* --- FULLSCREEN + LOCK --- */
+html, body {
   overflow: hidden;
-  width: 100%;
-  height: calc(var(--vh, 1vh) * 100);
-  touch-action: none;
+  width: 100vw;
+  height: 100dvh;
   background-color: #fff;
   font-family: sans-serif;
+  touch-action: none;
+  overscroll-behavior: none;
 }
 
 #xp-bar {
@@ -21,18 +28,18 @@ html, body {
   z-index: 1000;
 }
 
+/* --- CORE LAYOUT --- */
 #game-container {
-  width: 100vw;
-  max-width: 100%;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
-  box-sizing: border-box;
-  padding-top: 50px;
-  height: 100%;
+  justify-content: flex-start;
+  padding-top: 40px;
 }
 
+/* --- GRID --- */
 #grid-board {
   width: 324px;
   height: 324px;
@@ -52,6 +59,7 @@ html, body {
   z-index: 1;
 }
 
+/* --- TOOLBOX --- */
 #toolbox {
   display: flex;
   flex-wrap: wrap;
@@ -87,6 +95,7 @@ html, body {
   pointer-events: none;
 }
 
+/* --- RESULT --- */
 #result-box {
   text-align: center;
   margin-top: 10px;
@@ -101,4 +110,9 @@ html, body {
   padding: 10px 20px;
   font-size: 16px;
   margin-top: 10px;
+}
+
+/* --- Samsung S6 Hack --- */
+.samsung-s6 #game-container {
+  height: calc(100dvh - 40px); /* Adjust if needed */
 }
