@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let touchStartX = 0;
   let touchStartY = 0;
 
-  // Desktop drag
+  // Desktop drag support
   draggables.forEach(dragItem => {
     dragItem.addEventListener('dragstart', (event) => {
       isDragging = true;
@@ -34,14 +34,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Touch support (mobile)
+  // Mobile touch support
   draggables.forEach(dragItem => {
     dragItem.addEventListener('touchstart', (event) => {
       isDragging = true;
       activeItem = dragItem;
-      touchStartX = event.touches[0].clientX - dragItem.offsetLeft;
-      touchStartY = event.touches[0].clientY - dragItem.offsetTop;
-      dragItem.classList.add('dragging'); // 🔥 key fix
+
+      const rect = dragItem.getBoundingClientRect();
+      touchStartX = event.touches[0].clientX - rect.left;
+      touchStartY = event.touches[0].clientY - rect.top;
+
+      dragItem.style.position = 'fixed';
+      dragItem.style.zIndex = 9999;
+      dragItem.classList.add('dragging');
     });
 
     dragItem.addEventListener('touchmove', (event) => {
@@ -57,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     dragItem.addEventListener('touchend', () => {
       if (!isDragging || !activeItem) return;
+
       const dragRect = activeItem.getBoundingClientRect();
       let placed = false;
 
@@ -79,11 +85,12 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       if (!placed) {
+        activeItem.style.position = 'absolute';
         activeItem.style.left = '';
         activeItem.style.top = '';
       }
 
-      activeItem.classList.remove('dragging'); // remove fix
+      activeItem.classList.remove('dragging');
       isDragging = false;
       activeItem = null;
       checkCompletion();
