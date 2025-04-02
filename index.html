@@ -11,49 +11,17 @@
     <button onclick="goToMap()">🗺️ Progress Map</button>
     <button onclick="saveAndExit()">💾 Save & Exit</button>
   </div>
-  <h1>🌱 Ground Toybox v17</h1>
-  <p>Grow crops for the community. Pick 3 essentials from the toolbox. Not everything belongs in the soil.</p>
+  <h1>Simple Drag and Drop v18</h1>
 
   <div id="game-container">
-    <div id="game-area">
-      <div id="grow-dropzone">
-        <div class="grow-slot" data-slot="1"></div>
-        <div class="grow-slot" data-slot="2"></div>
-        <div class="grow-slot" data-slot="3"></div>
-      </div>
-      <div id="ground-strip"></div>
+    <div id="drag-area">
+      <div id="drag1" class="draggable" draggable="true">Drag Me</div>
     </div>
-
-    <div id="toolbox">
-      <p>Toolbox:</p>
-      <div class="draggable" id="seed" draggable="true">
-        <img src="assets/grow/seed.png" alt="Seed" />
-        <span>Seed</span>
-      </div>
-      <div class="draggable" id="water-can" draggable="true">
-        <img src="assets/grow/water-can.png" alt="Watering Can" />
-        <span>Watering Can</span>
-      </div>
-      <div class="draggable" id="sun" draggable="true">
-        <img src="assets/grow/sun.png" alt="Sunlight" />
-        <span>Sunlight</span>
-      </div>
-      <div class="draggable" id="cola" draggable="true">
-        <img src="assets/grow/cola.png" alt="Cola" />
-        <span>Cola</span>
-      </div>
-      <div class="draggable" id="flatscreen" draggable="true">
-        <img src="assets/grow/flatscreen.png" alt="Flatscreen" />
-        <span>Flatscreen</span>
-      </div>
-    </div>
+    <div id="drop-area">Drop Here</div>
   </div>
 
-  <div id="xp-counter">XP: <span id="xp-value">--</span></div>
-
-  <div id="completion-buttons" style="display: none;">
-    <button id="btn-continue">Continue</button>
-    <button id="btn-exit">Exit</button>
+  <div id="completion-message" style="display:none;">
+    <h2>Completed!</h2>
   </div>
 
   <script src="../playerState.js"></script>
