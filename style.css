@@ -33,14 +33,19 @@ body {
   line-height: 40px;
   cursor: grab;
   position: absolute;
+  z-index: 1000; /* Make sure it stays above drop zones */
+  transition: left 0.2s, top 0.2s;
 }
 
+/* Initial positioning (side by side inside drag-area) */
 #drag1 {
   left: 20px;
+  top: 20px;
 }
 
 #drag2 {
   left: 100px;
+  top: 20px;
 }
 
 #completion-message {
