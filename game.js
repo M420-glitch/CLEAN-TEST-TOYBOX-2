@@ -1,14 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
   const draggables = document.querySelectorAll('.draggable');
   const dropAreas = document.querySelectorAll('.drop-area');
-  const completionMessage = document.getElementById('completion-message');
+  const dragArea = document.getElementById('drag-area');
+  const messageBox = document.getElementById('completion-message');
+  const resultText = document.getElementById('result-text');
+  const tryAgainBtn = document.getElementById('try-again');
 
   let isDragging = false;
   let activeItem = null;
   let touchStartX = 0;
   let touchStartY = 0;
 
-  // Drag for Desktop
+  // Drag (desktop)
   draggables.forEach(dragItem => {
     dragItem.addEventListener('dragstart', (event) => {
       isDragging = true;
@@ -18,10 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   dropAreas.forEach(dropArea => {
-    dropArea.addEventListener('dragover', (event) => {
-      event.preventDefault();
-    });
-
+    dropArea.addEventListener('dragover', (event) => event.preventDefault());
     dropArea.addEventListener('drop', (event) => {
       event.preventDefault();
       if (!isDragging || !activeItem) return;
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Touch for Mobile
+  // Touch (mobile)
   draggables.forEach(dragItem => {
     dragItem.addEventListener('touchstart', (event) => {
       isDragging = true;
@@ -45,10 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
     dragItem.addEventListener('touchmove', (event) => {
       if (!isDragging || !activeItem) return;
       event.preventDefault();
-
       const touchX = event.touches[0].clientX;
       const touchY = event.touches[0].clientY;
-
       activeItem.style.left = (touchX - touchStartX) + 'px';
       activeItem.style.top = (touchY - touchStartY) + 'px';
     }, { passive: false });
@@ -58,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const dragRect = activeItem.getBoundingClientRect();
 
       let placed = false;
-
       dropAreas.forEach(dropArea => {
         const dropRect = dropArea.getBoundingClientRect();
         const centerX = dragRect.left + dragRect.width / 2;
@@ -89,11 +86,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // ✅ Check result
   function checkCompletion() {
-    const droppedCount =
-      Array.from(dropAreas).reduce((acc, area) => acc + area.querySelectorAll('.draggable').length, 0);
-    if (droppedCount === 2) {
-      completionMessage.style.display = 'block';
+    const drag1 = document.getElementById('drag1');
+    const drag2 = document.getElementById('drag2');
+
+    const inCorrectPlace =
+      drag1.parentElement.id === drag1.dataset.target &&
+      drag2.parentElement.id === drag2.dataset.target;
+
+    const allPlaced = [drag1, drag2].every(el => el.parentElement.classList.contains('drop-area'));
+
+    if (allPlaced) {
+      messageBox.style.display = 'block';
+      if (inCorrectPlace) {
+        resultText.textContent = "✅ Success! Both items correctly placed.";
+        messageBox.classList.remove('fail');
+      } else {
+        resultText.textContent = "❌ Incorrect match. Try again.";
+        messageBox.classList.add('fail');
+      }
     }
   }
+
+  // 🔄 Reset
+  tryAgainBtn.addEventListener('click', () => {
+    dragArea.appendChild(document.getElementById('drag1'));
+    dragArea.appendChild(document.getElementById('drag2'));
+
+    Object.assign(document.getElementById('drag1').style, { left: '20px', top: '0', position: 'absolute' });
+    Object.assign(document.getElementById('drag2').style, { left: '100px', top: '0', position: 'absolute' });
+
+    messageBox.style.display = 'none';
+    messageBox.classList.remove('fail');
+  });
 });
