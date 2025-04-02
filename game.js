@@ -1,14 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
   const draggables = document.querySelectorAll('.draggable');
-  const dropZone = document.getElementById('drop-zone');
+  const cells = document.querySelectorAll('.cell');
   const resultBox = document.getElementById('result-box');
   const resultText = document.getElementById('result-text');
   const tryAgainBtn = document.getElementById('try-again');
+
   let activeClone = null;
   let activeOriginal = null;
   let offsetX = 0;
   let offsetY = 0;
-
   let droppedItems = [];
 
   draggables.forEach(el => {
@@ -35,25 +35,29 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!activeClone || !activeOriginal) return;
 
       const cloneRect = activeClone.getBoundingClientRect();
-      const dropRect = dropZone.getBoundingClientRect();
-      const centerX = cloneRect.left + cloneRect.width / 2;
-      const centerY = cloneRect.top + cloneRect.height / 2;
+      let placed = false;
 
-      const isInside =
-        centerX >= dropRect.left &&
-        centerX <= dropRect.right &&
-        centerY >= dropRect.top &&
-        centerY <= dropRect.bottom;
+      cells.forEach(cell => {
+        const cellRect = cell.getBoundingClientRect();
+        const centerX = cloneRect.left + cloneRect.width / 2;
+        const centerY = cloneRect.top + cloneRect.height / 2;
 
-      if (isInside) {
-        const value = activeOriginal.dataset.value;
-        if (!droppedItems.includes(value)) {
-          droppedItems.push(value);
+        const isInside =
+          centerX >= cellRect.left &&
+          centerX <= cellRect.right &&
+          centerY >= cellRect.top &&
+          centerY <= cellRect.bottom;
+
+        if (isInside && cell.children.length === 0) {
+          const value = activeOriginal.dataset.value;
+          if (!droppedItems.includes(value)) {
+            droppedItems.push(value);
+          }
           const placed = activeOriginal.cloneNode(true);
           placed.classList.remove('draggable');
-          dropZone.appendChild(placed);
+          cell.appendChild(placed);
         }
-      }
+      });
 
       document.body.removeChild(activeClone);
       activeClone = null;
@@ -87,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   tryAgainBtn.addEventListener('click', () => {
-    dropZone.innerHTML = "Drop Items Here";
+    cells.forEach(cell => cell.innerHTML = '');
     droppedItems = [];
     resultBox.style.display = 'none';
     resultBox.classList.remove('fail', 'success');
