@@ -1,6 +1,8 @@
 body {
   font-family: sans-serif;
   text-align: center;
+  position: relative; /* ensures stacking context */
+  z-index: 0;
 }
 
 #game-container {
@@ -11,33 +13,37 @@ body {
   gap: 20px;
 }
 
+/* Shared drop and drag area styling */
 #drag-area,
 .drop-area {
   width: 200px;
   height: 200px;
   background-color: #f0f0f0;
   border: 2px dashed #ccc;
-  position: relative;
+  position: relative; /* enables z-index stacking */
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
   align-items: center;
+  z-index: 1; /* stays under drag items */
 }
 
+/* Draggable items */
 .draggable {
-  width: 40px;
+  width: 40px; /* 20% of 200px */
   height: 40px;
   background-color: #4CAF50;
   color: white;
   text-align: center;
   line-height: 40px;
   cursor: grab;
-  position: absolute;
-  z-index: 1000; /* Make sure it stays above drop zones */
+  position: absolute; /* needed for mobile drag movement */
+  z-index: 1000; /* force above drop zones */
   transition: left 0.2s, top 0.2s;
+  pointer-events: auto;
 }
 
-/* Initial positioning (side by side inside drag-area) */
+/* Initial position: side by side */
 #drag1 {
   left: 20px;
   top: 20px;
@@ -48,10 +54,13 @@ body {
   top: 20px;
 }
 
+/* Message area */
 #completion-message {
   margin-top: 30px;
   font-size: 20px;
   color: green;
+  z-index: 2;
+  position: relative;
 }
 
 #completion-message.fail {
@@ -64,6 +73,7 @@ body {
   font-size: 16px;
 }
 
+/* Mobile layout */
 @media (max-width: 768px) {
   #game-container {
     flex-direction: column;
