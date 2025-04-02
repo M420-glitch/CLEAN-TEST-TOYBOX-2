@@ -34,8 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!activeClone || !activeOriginal) return;
 
       const cloneRect = activeClone.getBoundingClientRect();
-      let placed = false;
-
       cells.forEach(cell => {
         const cellRect = cell.getBoundingClientRect();
         const centerX = cloneRect.left + cloneRect.width / 2;

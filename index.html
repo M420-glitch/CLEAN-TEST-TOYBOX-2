@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Toybox Toolbox Layout Test</title>
+  <title>Toybox Toolbox Grid</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -11,8 +11,8 @@
 
   <div id="game-container">
     <div id="grid-board">
-      <!-- 6x6 grid = 36 drop zones -->
-      <!-- We'll auto-generate this later too, but for now it's manual -->
+      <!-- 6x6 grid -->
+      <!-- Indexes 0–35 -->
       <div class="cell" data-index="0"></div>
       <div class="cell" data-index="1"></div>
       <div class="cell" data-index="2"></div>
@@ -52,7 +52,7 @@
     </div>
 
     <div id="toolbox">
-      <!-- 12 draggable numbered boxes -->
+      <!-- 12 draggable items -->
       <div class="draggable" data-value="1">1</div>
       <div class="draggable" data-value="2">2</div>
       <div class="draggable" data-value="3">3</div>
